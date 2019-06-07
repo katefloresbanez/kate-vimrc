@@ -1,0 +1,318 @@
+
+" -----------------------------------------------------------------
+" ---------------- Kate's Vimrc -----------------------------------
+" ---------------- Kate's Vimrc -----------------------------------
+" ---------------- Kate's Vimrc -----------------------------------
+" ---------------- Kate's Vimrc -----------------------------------
+" ---------------- Kate's Vimrc -----------------------------------
+" ---------------- Kate's Vimrc -----------------------------------
+" -----------------------------------------------------------------
+"
+"
+" TABLE OF CONTENTS
+"
+" 1. Setting up Vundle
+"   1.a Plugin List
+"   1.b Plugin Settings
+" 2. Map Commands
+"   2.a Auto Commands
+" 3. Quality of Life
+" 4. Global Commands
+"
+"
+" -----------------------------------------------------------------
+" 1 ---------------- SETUP VUNDLE ---------------------------------
+"
+" # Vundle is a plugin manager in vim. And is used to install
+"   and remove plugins for your vim.
+
+
+" Vundle - https://github.com/VundleVim/Vundle.vim
+"
+" Install Vundle
+"  git config --global core.autocrlf input
+"  git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+"  :PluginInstall (inside vim)
+"
+" Install New Plugins
+"  Add new plugin
+"  Restart vim
+"  :PluginInstall
+"
+
+" Required
+set nocompatible
+filetype off
+
+" Initialize Vundle
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+" Required
+Plugin 'VundleVim/Vundle.vim'
+
+
+" 1.a ---------------- PLUGIN LIST ---------------------------------
+
+" # Add your plugins here :)
+"   checkout https://vimawesome.com/ for vim plugins
+
+" ---- Basic Tools ----
+
+Plugin 'scrooloose/nerdtree'              " file explorer
+Plugin 'jistr/vim-nerdtree-tabs'          " nerdtree improved
+Plugin 'mileszs/ack.vim'                  " search tool
+Plugin 'tpope/vim-fugitive'               " git wrapper
+"Plugin 'oinksoft/npm.vim'                 " npm wrapper
+
+" ---- Productivity ----
+
+Plugin 'airblade/vim-gitgutter'           " display git diff while editing
+Plugin 'terryma/vim-multiple-cursors'     " multiple cursor
+Plugin 'w0rp/ale'                         " async linter
+Plugin 'feross/standard'                  " standard lint
+Plugin 'yannickcr/eslint-plugin-react'    " react eslint
+Plugin 'leafgarland/typescript-vim'       " typescript vim
+
+" ---- Aesthetics ----
+
+Plugin 'flazz/vim-colorschemes'           " colorschemes
+Plugin 'vim-airline/vim-airline'          " fancy menu (has prerequisite installation for symbols)
+Plugin 'vim-airline/vim-airline-themes'   " vim-airline themes
+Plugin 'yggdroot/indentline'              " indent line
+Plugin 'pangloss/vim-javascript'          " required for vim-jsx
+Plugin 'mxw/vim-jsx'                      " react highlighting
+
+" Required
+call vundle#end()
+filetype plugin indent on
+
+
+" 1.b ---------------- PLUGIN SETTINGS ---------------------------------
+
+" # Here is where we customize our plugins
+
+
+" ----------- Plugin - vim-nerdtree-tabs ---------------------------
+
+" Auto Open Nerd Tree Tabs
+let g:nerdtree_tabs_open_on_console_startup = 1
+
+" Show hidden files
+let NERDTreeShowHidden = 1
+
+" Ignore the following files
+let NERDTreeIgnore = ['\.git$', '\.pyc', '\.sw[a-p]$']
+
+
+" ----------- Plugin - ack.vim -------------------------------------
+
+" Use ag instead of ack (sudo apt-get install silversearcher-ag -y)
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep'
+endif
+
+
+" ----------- Plugin - vim-gitgutter -------------------------------
+
+" Auto suppress gitgutter when there are too many signs
+let g:gitgutter_max_signs = 500  " default value
+
+" Show diff markers quickly
+set updatetime=100
+
+
+" ----------- Plugin - vim-airline ---------------------------------
+
+" Default Theme (:AirlineTheme <TAB> to show other themes)
+let g:airline_theme = 'solarized'
+
+" Add fancy symbols to your airline tab
+" but has prerequisite installation
+" sudo apt-get install fonts-powerline
+let g:airline_powerline_fonts = 1
+
+
+" ----------- Plugin - async linter (ale) --------------------------
+
+" Define lint to use
+let g:ale_linters = {
+\   'javascript': ['eslint'],
+\   'typescript': ['eslint'],
+\}
+
+" Define lint to use
+let g:ale_fixers = {
+\   '*': ['remove_trailing_lines', 'trim_whitespace'],
+\   'javascript': ['prettier','eslint'],
+\   'typescript': ['prettier','eslint'],
+\}
+
+"let g:ale_set_highlights = {}
+
+" Enable lint error to show in airline
+let g:airline#extensions#ale#enabled = 1
+
+" Enable fix on save
+let g:ale_fix_on_save = 1
+
+
+" supposedly change the color hightlight of lint,
+" but I have no idea if this actually works.
+highlight ALEWarning ctermbg=Red
+
+
+" --------------------------------------------------------------------
+" 2 ---------------- MAP COMMANDS ------------------------------------
+
+" # Here is where we add custom commands for our vim.
+"   Mostly shorhand commands for more efficient development.
+
+" <Ctrl+a> Toggle NTT on all tabs
+nnoremap <C-a> :NERDTreeTabsToggle<CR>
+inoremap <C-a> <Esc>:NERDTreeTabsToggle<CR>
+
+" <CTRL+t> New tab
+nnoremap <C-t> :tabnew<CR><C-w><Left>
+inoremap <C-t> <Esc>:tabnew<CR><C-w><Left>
+
+" <CTRL+h> Previous tab
+nnoremap <C-h> :tabprevious<CR>
+inoremap <C-h> <Esc>:tabprevious<CR>
+
+" <CTRL+l> Next tab
+nnoremap <C-l> :tabnext<CR>
+inoremap <C-l> <Esc>:tabnext<CR>
+
+" \tm0 Move current tab to first position
+nnoremap <leader>tm0 :tabmove 0<CR>
+
+" \gs Git status
+nnoremap <leader>gs :Gstatus<CR>
+
+" \gc Git commit
+nnoremap <leader>gc :Gcommit<CR>
+
+" \gd Git diff
+nnoremap <leader>gd :Gdiff<CR>
+
+" \gb Git blame
+nnoremap <leader>gb :Gblame<CR>
+
+" \go Git checkout
+nnoremap <Leader>go :Git checkout<Space>
+
+" \gp Git push
+nnoremap <Leader>gp :Git push origin<Space>
+
+" \gl Git pull
+nnoremap <Leader>gl :Git pull origin<Space>
+
+" \gr Git rebase
+nnoremap <Leader>gr :Git rebase origin/
+
+
+" Ack will use Ack! instead (Ack! will not jump to first result automatically)
+cnoreabbrev Ack Ack!
+
+" \a Ack! search
+nnoremap <Leader>a :Ack!<Space>
+
+" FORCE hjkl
+noremap <Up>    <Nop>
+noremap <Down>  <Nop>
+noremap <Left>  <Nop>
+noremap <Right> <Nop>
+
+
+" 2.a ---------------- AUTO COMMANDS ---------------------------------
+"
+" Set Tabs to 2 when opening .js or .jsx files
+augroup javascript
+  autocmd BufReadPost,BufNewFile *.js,*.jsx,*.tsx set shiftwidth=2
+  autocmd BufReadPost,BufNewFile *.js,*.jsx,*.tsx set softtabstop=2
+  autocmd BufReadPost,BufNewFile *.js,*.jsx,*.tsx set tabstop=2
+augroup end
+
+
+" ------------------------------------------------------------------
+" 3 ----------------- QUALITY OF LIFE -------------------------------
+
+" Enable syntax highlighting
+syntax enable
+
+" Colorscheme
+set t_Co=256
+set background=dark
+colorscheme solarized
+
+" Interface
+set number          " Shows line numbers
+set numberwidth=5   " Set line number width (default=4)
+set ruler           " Shows line and character position (lower right)
+set showcmd         " Shows currently typed commands (lower right)
+set wildmenu        " Shows completable commands when pressing <TAB>
+                    "  i.e. :colorscheme <TAB>
+
+" Beeps and Flashes
+set noerrorbells    " Disable beeping sound
+set novisualbell    " Disable flashing screen part1
+set t_vb=           " Disable flashing screen part2
+
+" Command Timeouts
+set notimeout       " Disable command timeout part1
+set ttimeout        " Disable command timeout part2
+
+" Safety First!
+set confirm         " Executing :q without saving will show a confirm prompt
+
+" Search
+set hlsearch        " Search results will be highlighted
+set ignorecase      " Case insensitive search
+set incsearch       " Go to next match while typing search
+set smartcase       " Searching with uppercase letters will make search case sensitive
+
+" Speed
+set lazyredraw      " Buffer screen updates (helpful in complex recordings)
+
+" Tabs
+set expandtab       " Pressing tab will use spaces instead
+set shiftwidth=4    " Indentation spaces when using << or >>
+set softtabstop=4   " Always use the specified number of spaces
+set tabstop=4       " The number of characters the tab character will use
+
+" Split
+set splitright      " Cursor will appear on right split when using vsplit
+" set splitbelow      " Cursor will appear on bottom split when using split
+
+" Folding
+set foldmethod=indent " Easiest foldmethod to work with
+set foldlevelstart=1  " Start folding at X level
+set foldnestmax=2     " Only fold X levels deep
+"set nofoldenable     " Don't automatically fold (commented out to always enable folding at file open)
+
+
+
+" ------------------------------------------------------------------
+" 4 ---------------- GLOBAL COMMANDS -------------------------------
+
+" # these are commands to override vim commands
+
+
+" :W will force save a read-only file
+command W w !sudo tee % > /dev/null
+
+" Removes auto-indent when pasting (Removes the need to use ':set paste')
+let &t_SI .= "\<Esc>[?2004h"
+let &t_EI .= "\<Esc>[?2004l"
+inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
+function! XTermPasteBegin()
+  set pastetoggle=<Esc>[201~
+  set paste
+  return ""
+mrc
+"
+endfunction
+
+" ------------------------------------------------------------------
+" ------------------------------------------------------------------
